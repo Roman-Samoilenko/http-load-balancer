@@ -1,3 +1,3 @@
-module http-load-balancer
+module github.com/Roman-Samoilenko/http-load-balancer
 
 go 1.23

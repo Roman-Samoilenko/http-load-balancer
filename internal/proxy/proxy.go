@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"net/url"
-	"time"
 
 	"github.com/Roman-Samoilenko/http-load-balancer/internal/balancer"
 	"github.com/Roman-Samoilenko/http-load-balancer/internal/ratelimit"

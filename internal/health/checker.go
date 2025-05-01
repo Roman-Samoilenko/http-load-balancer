@@ -24,13 +24,13 @@ type Checker struct {
 // NewChecker создает новый экземпляр Checker
 func NewChecker(balancer balancer.Balancer, checkInterval, timeout time.Duration, logger *logger.Logger) *Checker {
 	httpClient := &http.Client{
-		Timeout: timeout,
+		Timeout: timeout * time.Second,
 	}
 
 	return &Checker{
 		balancer:      balancer,
-		checkInterval: checkInterval,
-		timeout:       timeout,
+		checkInterval: checkInterval * time.Second,
+		timeout:       timeout * time.Second,
 		logger:        logger,
 		stopCh:        make(chan struct{}),
 		httpClient:    httpClient,
@@ -109,9 +109,25 @@ func (c *Checker) checkBackend(backend *balancer.Backend) bool {
 
 	// Отправляем GET запрос для проверки доступности
 	resp, err := c.httpClient.Get(healthURL.String())
+
 	if err != nil {
+		// Проверяем, что ошибка имеет тип *url.Error
+		if urlErr, ok := err.(*url.Error); ok {
+			// Проверяем, что это ошибка таймаута
+			if urlErr.Timeout() {
+				// Обработка ошибки таймаута
+				c.logger.Error("Произошёл таймаут запроса")
+			} else {
+				// Другая ошибка
+				c.logger.Error("Ошибка запроса:", err)
+			}
+		} else {
+			// Ошибка другого типа
+			c.logger.Error("Ошибка запроса:", err)
+		}
 		return false
 	}
+
 	defer resp.Body.Close()
 
 	// Считаем бэкенд здоровым, если код ответа 2xx

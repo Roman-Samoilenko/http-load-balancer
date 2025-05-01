@@ -76,24 +76,3 @@ func LoadConfig(path string) (*Config, error) {
 
 	return &config, nil
 }
-
-// LoadConfigFromEnv загружает конфигурацию из переменных окружения
-func LoadConfigFromEnv() (*Config, error) {
-	// Для простоты первой версии пока не реализуем
-	// При необходимости можно добавить загрузку из переменных окружения
-	return &Config{
-		Server: ServerConfig{
-			Port: 8080,
-		},
-		BalancerType: "round-robin",
-		RateLimit: RateLimitConfig{
-			Enabled:         false,
-			DefaultRate:     10,
-			DefaultCapacity: 100,
-		},
-		HealthCheck: HealthCheckConfig{
-			Interval: 10 * time.Second,
-			Timeout:  2 * time.Second,
-		},
-	}, nil
-}
