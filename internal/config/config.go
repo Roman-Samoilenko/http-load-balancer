@@ -68,10 +68,10 @@ func LoadConfig(path string) (*Config, error) {
 		config.RateLimit.DefaultCapacity = 100
 	}
 	if config.HealthCheck.Interval == 0 {
-		config.HealthCheck.Interval = 10 * time.Second
+		config.HealthCheck.Interval = 10
 	}
 	if config.HealthCheck.Timeout == 0 {
-		config.HealthCheck.Timeout = 2 * time.Second
+		config.HealthCheck.Timeout = 2
 	}
 
 	return &config, nil

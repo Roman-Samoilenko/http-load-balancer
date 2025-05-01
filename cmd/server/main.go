@@ -28,6 +28,7 @@ func main() {
 
 	// Загрузка конфигурации
 	cfg, err := config.LoadConfig(*configPath)
+
 	if err != nil {
 		log.Error("Ошибка загрузки конфигурации:", err)
 		os.Exit(1)

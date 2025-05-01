@@ -13,7 +13,7 @@ import (
 // Checker отвечает за проверку здоровья бэкендов
 type Checker struct {
 	balancer      balancer.Balancer
-	checkInterval time.Duration
+	CheckInterval time.Duration
 	timeout       time.Duration
 	logger        *logger.Logger
 	stopCh        chan struct{}
@@ -29,7 +29,7 @@ func NewChecker(balancer balancer.Balancer, checkInterval, timeout time.Duration
 
 	return &Checker{
 		balancer:      balancer,
-		checkInterval: checkInterval * time.Second,
+		CheckInterval: checkInterval * time.Second,
 		timeout:       timeout * time.Second,
 		logger:        logger,
 		stopCh:        make(chan struct{}),
@@ -46,7 +46,7 @@ func (c *Checker) Start() {
 		// Запускаем первую проверку сразу
 		c.checkAllBackends()
 
-		ticker := time.NewTicker(c.checkInterval)
+		ticker := time.NewTicker(c.CheckInterval)
 		defer ticker.Stop()
 
 		for {
