@@ -13,13 +13,3 @@ type TokenBucket struct {
 	lastRefill time.Time
 	mu         sync.Mutex
 }
-
-//// NewTokenBucket создает новый экземпляр TokenBucket
-//func NewTokenBucket(capacity int, rate float64) *TokenBucket {
-//	// Создание Token Bucket
-//}
-//
-//// Allow проверяет и берет токен, если доступен
-//func (tb *TokenBucket) Allow() bool {
-//	// Проверка наличия токена и его взятие
-//}

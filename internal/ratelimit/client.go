@@ -13,8 +13,3 @@ type Client struct {
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
-
-//// NewClient создает нового клиента
-//func NewClient(id string, capacity int, rate float64) *Client {
-//	// Создание клиента
-//}

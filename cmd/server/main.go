@@ -44,7 +44,7 @@ func main() {
 			IsAlive: true,
 		}
 		backends = append(backends, backend)
-		log.Info("Добавлен бэкенд:", backendCfg.URL)
+		log.Info("Добавлен бэкенд: ", backendCfg.URL)
 	}
 
 	// Создание балансировщика
@@ -62,7 +62,7 @@ func main() {
 	var rateLimiter *ratelimit.Manager
 	if cfg.RateLimit.Enabled {
 		rateLimiter = ratelimit.NewManager(cfg.RateLimit.DefaultCapacity, cfg.RateLimit.DefaultRate)
-		log.Info("Rate limiting включен. Стандартный лимит:", cfg.RateLimit.DefaultRate, "запросов в секунду")
+		log.Info("Rate limiting включен. Стандартный лимит: ", cfg.RateLimit.DefaultRate, " запросов в секунду")
 	}
 
 	// Настройка health checker
@@ -76,7 +76,7 @@ func main() {
 	// Запуск сервера
 	serverAddr := fmt.Sprintf(":%d", cfg.Server.Port)
 	server := proxy.Start(serverAddr)
-	log.Info("Сервер запущен на", serverAddr)
+	log.Info("Сервер запущен на ", serverAddr)
 
 	// Обработка сигналов для graceful shutdown
 	quit := make(chan os.Signal, 1)

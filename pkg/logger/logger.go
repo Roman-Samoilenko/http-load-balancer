@@ -82,7 +82,7 @@ func (l *Logger) Error(args ...interface{}) {
 
 // log форматирует и выводит сообщение
 func (l *Logger) log(level string, args ...interface{}) {
-	now := time.Now().Format("2006-01-02 15:04:05")
+	now := time.Now().Format("06-04-02 15:04")
 	message := fmt.Sprint(args...)
 	l.logger.Printf("[%s] %s: %s", now, level, message)
 }

@@ -33,11 +33,11 @@ func (tb *TokenBucket) Allow() bool {
 
 // refill пополняет токены в бакете
 func (tb *TokenBucket) refill(now time.Time) {
-	elapsed := now.Sub(tb.lastRefill).Seconds()
-	tb.lastRefill = now
+	delta := now.Sub(tb.lastRefill).Seconds() // время, прошедшее с последнего пополнения
+	tb.lastRefill = now                       // обновляет время последнего пополнения
 
 	// Вычисляем, сколько токенов нужно добавить
-	newTokens := elapsed * tb.rate
+	newTokens := delta * tb.rate
 
 	// Обновляем количество токенов, не превышая емкость
 	if newTokens > 0 {
@@ -95,49 +95,4 @@ func (m *Manager) GetClient(id string) *Client {
 func (m *Manager) Allow(id string) bool {
 	client := m.GetClient(id)
 	return client.Bucket.Allow()
-}
-
-// AddClient добавляет нового клиента с указанными параметрами
-func (m *Manager) AddClient(id string, capacity int, rate float64) {
-	m.mu.Lock()
-	defer m.mu.Unlock()
-
-	m.clients[id] = &Client{
-		ID:     id,
-		Bucket: NewTokenBucket(capacity, rate),
-	}
-}
-
-// UpdateClient обновляет настройки клиента
-func (m *Manager) UpdateClient(id string, capacity int, rate float64) bool {
-	m.mu.Lock()
-	defer m.mu.Unlock()
-
-	if _, exists := m.clients[id]; !exists {
-		return false
-	}
-
-	m.clients[id].Bucket = NewTokenBucket(capacity, rate)
-	return true
-}
-
-// DeleteClient удаляет клиента
-func (m *Manager) DeleteClient(id string) bool {
-	m.mu.Lock()
-	defer m.mu.Unlock()
-
-	if _, exists := m.clients[id]; !exists {
-		return false
-	}
-
-	delete(m.clients, id)
-	return true
-}
-
-// Вспомогательная функция для Go < 1.21
-func min(a, b float64) float64 {
-	if a < b {
-		return a
-	}
-	return b
 }

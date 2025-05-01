@@ -13,17 +13,12 @@
       "url": "http://localhost:8002",
       "weight": 1,
       "max_connections": 100
-    },
-    {
-      "url": "http://localhost:8003",
-      "weight": 1,
-      "max_connections": 100
     }
   ],
   "rate_limit": {
     "enabled": true,
-    "default_rate": 10,
-    "default_capacity": 100
+    "default_rate": 0.2,
+    "default_capacity": 10
   },
   "health_check": {
     "interval": 10,

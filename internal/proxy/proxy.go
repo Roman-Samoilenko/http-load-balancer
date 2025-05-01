@@ -82,7 +82,6 @@ func (lb *LoadBalancer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Копирование оригинального запроса для модификации
 	proxyReq := r.Clone(r.Context())
 	proxyReq.URL.Scheme = backendURL.Scheme
 	proxyReq.URL.Host = backendURL.Host

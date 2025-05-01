@@ -21,7 +21,7 @@ go build -o load-balancer ./cmd/server
 
 ## Конфигурация
 
-Конфигурация приложения осуществляется через JSON-файл `configs/config.json`:
+Конфигурация приложения осуществляется через файл `configs/config.json`:
 
 ```json
 {
@@ -57,3 +57,12 @@ go build -o load-balancer ./cmd/server
 
 - `server.port` - порт, на котором будет работать балансировщик
 - `balancer_type` - алгоритм балансировки (Round-Robin, least connections, random)
+- `weight` - вес бэкенда для алгоритмов балансировки нагрузки
+
+#### Rate limit:
+- `default_rate` - скорость пополнения токенов для пользователя
+- `default_capacity` - максимальный запас токенов для пользователя
+
+#### Health Check:
+- `interval` - временные промежутки проверки доступности бэкенда
+- `timeout` - предельное время ожидания ответа

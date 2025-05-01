@@ -22,8 +22,3 @@ type Balancer interface {
 	MarkBackendUp(url string)
 	Backends() []*Backend
 }
-
-//// NewBalancer создает экземпляр балансировщика указанного типа
-//func NewBalancer(balancerType string, backends []*Backend) Balancer {
-//	// Создание балансировщика нужного типа
-//}
