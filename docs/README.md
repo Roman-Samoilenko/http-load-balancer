@@ -37,12 +37,11 @@
 
 ```bash
 git clone https://github.com/Roman-Samoilenko/http-load-balancer.git
-cd load-balancer
-go build -o load-balancer ./cmd/server
+cd http-load-balancer
+go build -o http-load-balancer ./cmd/server
 ```
 
 ## Конфигурация
-
 Конфигурация приложения осуществляется через файл `configs/config.json`:
 
 ```json
@@ -76,10 +75,9 @@ go build -o load-balancer ./cmd/server
 ```
 
 ### Параметры конфигурации
-
 - `server.port` - порт, на котором будет работать балансировщик
 - `balancer_type` - алгоритм балансировки (Round-Robin, least connections, random)
-- `weight` - вес бэкенда для алгоритмов балансировки нагрузки
+- `backends.weight` - вес бэкенда для алгоритмов балансировки нагрузки
 
 #### Rate limit:
 - `default_rate` - скорость пополнения токенов для пользователя
@@ -88,3 +86,13 @@ go build -o load-balancer ./cmd/server
 #### Health Check:
 - `interval` - временные промежутки проверки доступности бэкенда
 - `timeout` - предельное время ожидания ответа
+
+
+## TODO
+* [ ] Реализовать алгоритм least connections.
+* [ ] Unit-testing least connections.
+* [ ] Реализовать алгоритм random.
+* [ ] Unit-testing random.
+* [ ] Подключить БД и написать CRUD для хранения состояний клиентов.
+* [ ] Написать Dockerfile и docker-compose.yml для развертывания сервиса и БД.
+* [ ] Реализовать подбор цветовых схем для отображения поколений.
