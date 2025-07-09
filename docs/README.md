@@ -95,4 +95,3 @@ go build -o http-load-balancer ./cmd/server
 * [ ] Unit-testing random.
 * [ ] Подключить БД и написать CRUD для хранения состояний клиентов.
 * [ ] Написать Dockerfile и docker-compose.yml для развертывания сервиса и БД.
-* [ ] Реализовать подбор цветовых схем для отображения поколений.
