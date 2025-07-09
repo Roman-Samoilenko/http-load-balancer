@@ -2,6 +2,8 @@ package balancer
 
 import (
 	"testing"
+
+	"github.com/Roman-Samoilenko/http-load-balancer/internal/backend"
 )
 
 func TestRoundRobinBalancer(t *testing.T) {

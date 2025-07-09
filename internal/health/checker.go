@@ -105,7 +105,7 @@ func (c *Checker) checkBackend(backend *balancer.Backend) bool {
 
 	// Формируем URL для проверки
 	healthURL := *backendURL
-	healthURL.Path = "/health" // Можно настроить путь для проверки
+	healthURL.Path = "/health"
 
 	// Отправляем GET запрос для проверки доступности
 	resp, err := c.httpClient.Get(healthURL.String())

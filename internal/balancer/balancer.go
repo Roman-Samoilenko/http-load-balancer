@@ -2,16 +2,9 @@ package balancer
 
 import (
 	"sync"
-)
 
-// Backend представляет бэкенд-сервер
-type Backend struct {
-	URL         string
-	Weight      int
-	ActiveConns int64
-	IsAlive     bool
-	mu          sync.RWMutex
-}
+	"github.com/Roman-Samoilenko/http-load-balancer/internal/backend"
+)
 
 // Balancer интерфейс для различных алгоритмов балансировки
 type Balancer interface {
