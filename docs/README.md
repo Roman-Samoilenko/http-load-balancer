@@ -89,8 +89,6 @@ go build -o http-load-balancer ./cmd/server
 
 
 ## TODO
-* [ ] Реализовать алгоритм least connections.
-* [ ] Unit-testing least connections.
 * [ ] Реализовать алгоритм random.
 * [ ] Unit-testing random.
 * [ ] Подключить БД и написать CRUD для хранения состояний клиентов.

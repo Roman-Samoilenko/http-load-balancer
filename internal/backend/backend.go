@@ -11,7 +11,7 @@ type Backend struct {
 	Weight      int
 	ActiveConns int64
 	IsAlive     bool
-	mu          sync.RWMutex
+	Mu          sync.RWMutex
 }
 
 // IncrementConnections увеличивает счетчик активных соединений
@@ -26,8 +26,8 @@ func (b *Backend) DecrementConnections() {
 
 // SetAlive устанавливает статус доступности бэкенда
 func (b *Backend) SetAlive(isAlive bool) {
-	b.mu.Lock()
-	defer b.mu.Unlock()
+	b.Mu.Lock()
+	defer b.Mu.Unlock()
 	b.IsAlive = isAlive
 }
 

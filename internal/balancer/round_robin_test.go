@@ -3,7 +3,7 @@ package balancer
 import (
 	"testing"
 
-	"github.com/Roman-Samoilenko/http-load-balancer/internal/backend"
+	. "github.com/Roman-Samoilenko/http-load-balancer/internal/backend"
 )
 
 func TestRoundRobinBalancer(t *testing.T) {
@@ -64,21 +64,21 @@ func TestRoundRobinBalancer(t *testing.T) {
 	}
 
 	// Проверяем, что бэкенд помечен как недоступный
-	backend1.mu.RLock()
+	backend1.Mu.RLock()
 	if backend1.IsAlive {
 		t.Errorf("Бэкенд все еще помечен как доступный после MarkBackendDown")
 	}
-	backend1.mu.RUnlock()
+	backend1.Mu.RUnlock()
 
 	// Тест 4: Возвращаем первый бэкенд обратно
 	balancer.MarkBackendUp(backend1.URL)
 
 	// Проверяем, что бэкенд помечен как доступный
-	backend1.mu.RLock()
+	backend1.Mu.RLock()
 	if !backend1.IsAlive {
 		t.Errorf("Бэкенд не помечен как доступный после MarkBackendUp")
 	}
-	backend1.mu.RUnlock()
+	backend1.Mu.RUnlock()
 
 	// После возвращения бэкенда должно продолжаться чередование
 	firstAfterUp := balancer.NextBackend()

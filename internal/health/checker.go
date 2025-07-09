@@ -1,11 +1,13 @@
 package health
 
 import (
+	"io"
 	"net/http"
 	"net/url"
 	"sync"
 	"time"
 
+	. "github.com/Roman-Samoilenko/http-load-balancer/internal/backend"
 	"github.com/Roman-Samoilenko/http-load-balancer/internal/balancer"
 	"github.com/Roman-Samoilenko/http-load-balancer/pkg/logger"
 )
@@ -74,7 +76,7 @@ func (c *Checker) checkAllBackends() {
 	var wg sync.WaitGroup
 	for _, backend := range backends {
 		wg.Add(1)
-		go func(b *balancer.Backend) {
+		go func(b *Backend) {
 			defer wg.Done()
 			currentStatus := b.IsAlive
 			newStatus := c.checkBackend(b)
@@ -96,7 +98,7 @@ func (c *Checker) checkAllBackends() {
 }
 
 // checkBackend проверяет доступность одного бэкенда
-func (c *Checker) checkBackend(backend *balancer.Backend) bool {
+func (c *Checker) checkBackend(backend *Backend) bool {
 	backendURL, err := url.Parse(backend.URL)
 	if err != nil {
 		c.logger.Error("Некорректный URL бэкенда:", err)
@@ -128,7 +130,12 @@ func (c *Checker) checkBackend(backend *balancer.Backend) bool {
 		return false
 	}
 
-	defer resp.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			c.logger.Error("Ошибка при закрытии тела", err)
+		}
+	}(resp.Body)
 
 	// Считаем бэкенд здоровым, если код ответа 2xx
 	return resp.StatusCode >= 200 && resp.StatusCode < 300

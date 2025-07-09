@@ -1,10 +1,9 @@
 package balancer
 
 import (
+	. "github.com/Roman-Samoilenko/http-load-balancer/internal/backend"
 	"sync"
 	"sync/atomic"
-
-	"github.com/Roman-Samoilenko/http-load-balancer/internal/backend"
 )
 
 // RoundRobin реализует алгоритм балансировки Round-Robin
@@ -42,9 +41,9 @@ func (r *RoundRobin) NextBackend() *Backend {
 		backend := r.backends[idx]
 
 		// Проверяем, что бэкенд доступен
-		backend.mu.RLock()
+		backend.Mu.RLock()
 		isAlive := backend.IsAlive
-		backend.mu.RUnlock()
+		backend.Mu.RUnlock()
 
 		if isAlive {
 			// Инкрементируем счетчик соединений для выбранного бэкенда

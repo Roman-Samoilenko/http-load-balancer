@@ -2,7 +2,7 @@
   "server": {
     "port": 8080
   },
-  "balancer_type": "round-robin",
+  "balancer_type": "!random",
   "backends": [
     {
       "url": "http://localhost:8001",

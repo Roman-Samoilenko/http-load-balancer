@@ -9,6 +9,7 @@ import (
 	"syscall"
 	"time"
 
+	. "github.com/Roman-Samoilenko/http-load-balancer/internal/backend"
 	"github.com/Roman-Samoilenko/http-load-balancer/internal/balancer"
 	"github.com/Roman-Samoilenko/http-load-balancer/internal/config"
 	"github.com/Roman-Samoilenko/http-load-balancer/internal/health"
@@ -36,9 +37,9 @@ func main() {
 	log.Info("Конфигурация загружена успешно")
 
 	// Создание бэкендов
-	var backends []*balancer.Backend
+	var backends []*Backend
 	for _, backendCfg := range cfg.Backends {
-		backend := &balancer.Backend{
+		backend := &Backend{
 			URL:     backendCfg.URL,
 			Weight:  backendCfg.Weight,
 			IsAlive: true,
@@ -53,6 +54,9 @@ func main() {
 	case "round-robin":
 		bal = balancer.NewRoundRobin(backends)
 		log.Info("Используется алгоритм балансировки Round-Robin")
+	case "random":
+		bal = balancer.NewRandom(backends)
+		log.Info("Используется алгоритм балансировки Random")
 	default:
 		log.Info("Используется алгоритм балансировки Round-Robin (по умолчанию)")
 		bal = balancer.NewRoundRobin(backends)
@@ -71,11 +75,11 @@ func main() {
 	log.Info("Запущена проверка доступности бэкендов")
 
 	// Создание прокси
-	proxy := proxy.NewLoadBalancer(bal, rateLimiter, log)
+	prx := proxy.NewLoadBalancer(bal, rateLimiter, log)
 
 	// Запуск сервера
 	serverAddr := fmt.Sprintf(":%d", cfg.Server.Port)
-	server := proxy.Start(serverAddr)
+	server := prx.Start(serverAddr)
 	log.Info("Сервер запущен на ", serverAddr)
 
 	// Обработка сигналов для graceful shutdown
