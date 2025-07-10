@@ -1,0 +1,6 @@
+version: '3.8'
+
+services:
+  http-load-balancer:
+    image: load-balancer
+    network_mode: host

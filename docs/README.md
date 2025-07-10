@@ -89,7 +89,6 @@ go build -o http-load-balancer ./cmd/server
 
 
 ## TODO
-* [ ] Реализовать алгоритм random.
-* [ ] Unit-testing random.
+* [x] Реализовать алгоритм random.
 * [ ] Подключить БД и написать CRUD для хранения состояний клиентов.
-* [ ] Написать Dockerfile и docker-compose.yml для развертывания сервиса и БД.
+* [x] Написать Dockerfile и docker-compose.yml для развертывания сервиса.
