@@ -2,27 +2,27 @@ package balancer
 
 import (
 	. "github.com/Roman-Samoilenko/http-load-balancer/internal/backend"
-	"sync"
 	"sync/atomic"
 )
 
 // RoundRobin реализует алгоритм балансировки Round-Robin
 type RoundRobin struct {
-	backends []*Backend
-	current  uint32 // Индекс текущего бэкенда
-	mu       sync.RWMutex
+	BaseBalancer
+	current uint32 // Индекс текущего бэкенда
 }
 
 // NewRoundRobin создает новый экземпляр балансировщика Round-Robin
 func NewRoundRobin(backends []*Backend) *RoundRobin {
 	return &RoundRobin{
-		backends: backends,
-		current:  0,
+		BaseBalancer: BaseBalancer{
+			backends: backends,
+		},
+		current: 0,
 	}
 }
 
 // NextBackend возвращает следующий бэкенд для обработки запроса
-// Реализует основную логику алгоритма Round-Robin
+// реализует основную логику алгоритма Round-Robin
 func (r *RoundRobin) NextBackend() *Backend {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
@@ -54,62 +54,4 @@ func (r *RoundRobin) NextBackend() *Backend {
 
 	// Если нет доступных бэкендов, возвращаем nil
 	return nil
-}
-
-// AddBackend добавляет новый бэкенд в пул
-func (r *RoundRobin) AddBackend(backend *Backend) {
-	r.mu.Lock()
-	defer r.mu.Unlock()
-
-	// Устанавливаем флаг активности по умолчанию
-	backend.SetAlive(true)
-	r.backends = append(r.backends, backend)
-}
-
-// RemoveBackend удаляет бэкенд из пула по URL
-func (r *RoundRobin) RemoveBackend(url string) {
-	r.mu.Lock()
-	defer r.mu.Unlock()
-
-	for i, backend := range r.backends {
-		if backend.URL == url {
-			// Удаляем бэкенд из слайса
-			r.backends = append(r.backends[:i], r.backends[i+1:]...)
-			return
-		}
-	}
-}
-
-// MarkBackendDown помечает бэкенд как недоступный
-func (r *RoundRobin) MarkBackendDown(url string) {
-	r.mu.RLock()
-	defer r.mu.RUnlock()
-
-	for _, backend := range r.backends {
-		if backend.URL == url {
-			backend.SetAlive(false)
-			return
-		}
-	}
-}
-
-// MarkBackendUp помечает бэкенд как доступный
-func (r *RoundRobin) MarkBackendUp(url string) {
-	r.mu.RLock()
-	defer r.mu.RUnlock()
-
-	for _, backend := range r.backends {
-		if backend.URL == url {
-			backend.SetAlive(true)
-			return
-		}
-	}
-}
-
-// Backends возвращает список всех бэкендов
-func (r *RoundRobin) Backends() []*Backend {
-	r.mu.RLock()
-	defer r.mu.RUnlock()
-
-	return r.backends
 }

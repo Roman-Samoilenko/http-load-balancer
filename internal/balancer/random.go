@@ -3,17 +3,17 @@ package balancer
 import (
 	. "github.com/Roman-Samoilenko/http-load-balancer/internal/backend"
 	"math/rand/v2"
-	"sync"
 )
 
 type Random struct {
-	backends []*Backend
-	mu       sync.RWMutex
+	BaseBalancer
 }
 
 func NewRandom(backends []*Backend) *Random {
 	return &Random{
-		backends: backends,
+		BaseBalancer: BaseBalancer{
+			backends: backends,
+		},
 	}
 }
 
@@ -39,56 +39,4 @@ func (r *Random) NextBackend() *Backend {
 	backAlive[indexBE].IncrementConnections()
 	return backAlive[indexBE]
 
-}
-
-func (r *Random) AddBackend(backend *Backend) {
-	r.mu.Lock()
-	defer r.mu.Unlock()
-
-	backend.SetAlive(true)
-	r.backends = append(r.backends, backend)
-	return
-}
-
-func (r *Random) RemoveBackend(url string) {
-	r.mu.Lock()
-	defer r.mu.Unlock()
-
-	for i, b := range r.backends {
-		if b.URL == url {
-			r.backends = append(r.backends[:i], r.backends[i+1:]...)
-			return
-		}
-	}
-}
-
-func (r *Random) MarkBackendDown(url string) {
-	r.mu.RLock()
-	defer r.mu.RUnlock()
-
-	for _, b := range r.backends {
-		if b.URL == url {
-			b.SetAlive(false)
-			return
-		}
-	}
-}
-
-func (r *Random) MarkBackendUp(url string) {
-	r.mu.RLock()
-	defer r.mu.RUnlock()
-
-	for _, b := range r.backends {
-		if b.URL == url {
-			b.SetAlive(true)
-			return
-		}
-	}
-}
-
-func (r *Random) Backends() []*Backend {
-	r.mu.RLock()
-	defer r.mu.RUnlock()
-
-	return r.backends
 }
